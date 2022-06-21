@@ -1,0 +1,7 @@
+{
+  "name": "plan-a-frontend-challenge-carlos-borges",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}
