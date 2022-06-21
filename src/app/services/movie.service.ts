@@ -9,7 +9,7 @@ export interface MovieResponse {
   backdrop_path?: string | null;
   belongs_to_collection?: null;
   budget?: number;
-  genres?: { id?: number, name?: string }[];
+  genres?: { id?: number; name?: string }[];
   homepage?: string;
   id?: number;
   imdb_id?: string;
