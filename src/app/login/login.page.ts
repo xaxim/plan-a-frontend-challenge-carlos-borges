@@ -19,7 +19,7 @@ export class LoginPage implements OnInit {
   });
 
   constructor(
-    private loginService: LoginService
+    public loginService: LoginService
   ) { }
 
   ngOnInit() {

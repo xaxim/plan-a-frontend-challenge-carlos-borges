@@ -1,7 +1,7 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
     <ion-title>
-      Blank
+      Carlos Borges
     </ion-title>
   </ion-toolbar>
 </ion-header>
@@ -9,12 +9,28 @@
 <ion-content [fullscreen]="true">
   <ion-header collapse="condense">
     <ion-toolbar>
-      <ion-title size="large">Blank</ion-title>
+      <ion-title size="large">Latest Movie:</ion-title>
     </ion-toolbar>
   </ion-header>
 
   <div id="container">
-    <strong>Ready to create an app?</strong>
-    <p>Start with Ionic <a target="_blank" rel="noopener noreferrer" href="https://ionicframework.com/docs/components">UI Components</a></p>
+    <ion-card *ngIf="latest">
+      <img [src]="posterURL" *ngIf="posterURL" />
+      <ion-card-header>
+        <ion-card-title>{{ latest.title }} {{ latest.adult ? '🔞' : '' }}</ion-card-title>
+        <ion-card-subtitle *ngIf="latest.original_title">Original Title: {{ latest.original_title }}</ion-card-subtitle>
+      </ion-card-header>
+
+      <ion-card-content>
+        {{ latest.overview }}<br>
+      </ion-card-content>
+    </ion-card>
+    <ion-list lines="none" class="ion-margin-vertical ion-padding ion-text-center">
+      <ion-item>
+        <ion-label>
+          <ion-button expand="block" size="large" type="submit" class="ion-margin-vertical" (click)="logout()">Logout</ion-button>
+        </ion-label>
+      </ion-item>
+    </ion-list>
   </div>
 </ion-content>
