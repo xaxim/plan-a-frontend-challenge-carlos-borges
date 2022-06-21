@@ -3,7 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { LoginService } from '../services/login.service';
 import { MovieResponse, MovieService } from '../services/movie.service';
-import {HttpClient} from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-home',
@@ -12,8 +12,9 @@ import {HttpClient} from '@angular/common/http';
 })
 export class HomePage implements OnInit {
 
-  latest: MovieResponse;
+  movieDisplayed: MovieResponse;
   posterURL: string;
+  latest = true;
 
   constructor(
     private loginService: LoginService,
@@ -22,9 +23,22 @@ export class HomePage implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    this.displayLatest();
+  }
+
+  displayLatest() {
+    this.latest = true;
     this.movieService.getLatestMovie().subscribe(latest => {
-      this.latest = latest;
-      this.posterURL = this.movieService.getMoviePoster(latest);
+      this.movieDisplayed = latest;
+      this.posterURL = this.movieService.getMoviePoster(this.movieDisplayed);
+    });
+  }
+
+  displayMostPopular() {
+    this.latest = false;
+    this.movieService.getPopularMovies().subscribe(popularList => {
+      this.movieDisplayed = popularList.results[0];
+      this.posterURL = this.movieService.getMoviePoster(this.movieDisplayed);
     });
   }
 

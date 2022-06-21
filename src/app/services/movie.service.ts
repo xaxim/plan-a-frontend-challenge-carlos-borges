@@ -67,12 +67,17 @@ export class MovieService {
     return this.http.get<MovieResponse>(`${this.loginService.apiBase}/movie/latest?api_key=${this.loginService.apiKey}&language=en-US`);
   }
 
+  public getPopularMovies(): Observable<{ results: MovieResponse[] }> {
+    // eslint-disable-next-line max-len
+    return this.http.get<{ results: MovieResponse[] }>(`${this.loginService.apiBase}/movie/popular?api_key=${this.loginService.apiKey}&language=en-US`);
+  }
+
   private getConfiguration() {
-    this.http.get<ConfigurationResponse>(`${this.loginService.apiBase}/configuration?api_key=${this.loginService.apiKey}`)
+    const configurationSub = this.http
+      .get<ConfigurationResponse>(`${this.loginService.apiBase}/configuration?api_key=${this.loginService.apiKey}`)
       .subscribe(response => {
         this.configuration = response;
-        console.log(response);
-        console.log(response?.images.poster_sizes?.[response?.images.poster_sizes?.length - 1]);
+        configurationSub.unsubscribe();
       });
   }
 }
