@@ -2,6 +2,7 @@ import { Injectable, OnDestroy } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Subscription } from 'rxjs';
 import { Router } from '@angular/router';
+import { StorageService } from './storage.service';
 
 export interface Credentials {
   email: string;
@@ -23,13 +24,12 @@ export interface TokenResponse {
 })
 export class LoginService implements OnDestroy {
 
-  public loginToken: string;
-
   subs: Subscription[];
 
   constructor(
     private http: HttpClient,
-    private router: Router
+    private router: Router,
+    private storage: StorageService
   ) { }
 
   ngOnDestroy(): void {
@@ -43,8 +43,8 @@ export class LoginService implements OnDestroy {
     const FIXED_PASSWORD = '123456';
     const createTokenURL = `${BASE_API}/authentication/token/new?api_key=${API_KEY}`;
     const validateWithLoginURL = `${BASE_API}/authentication/token/validate_with_login?api_key=${API_KEY}`;
-    this.http.get(createTokenURL).subscribe((newTokenResponse: TokenResponse) => {
-      this.http.post(
+    const newTokenSubscription = this.http.get(createTokenURL).subscribe((newTokenResponse: TokenResponse) => {
+      const validationSubscription = this.http.post(
         validateWithLoginURL,
         {
           username: FIXED_USERNAME,
@@ -52,18 +52,24 @@ export class LoginService implements OnDestroy {
           // eslint-disable-next-line @typescript-eslint/naming-convention
           request_token: newTokenResponse.request_token
         })
-        .subscribe((validateWithLoginResponse: TokenResponse) => {
-          if (validateWithLoginResponse.success) {
+        .subscribe(async (validateWithLoginResponse: TokenResponse) => {
+          if (validateWithLoginResponse?.success) {
             this.router.navigate(['/home']);
-            //TODO: Store email, password and token
+            this.storage.set(
+              'currentUser',
+              {
+                email: credentials.email,
+                password: credentials.password,
+                token: validateWithLoginResponse.request_token
+              });
           }
         });
+      this.subs.push(validationSubscription);
     });
-
+    this.subs.push(newTokenSubscription);
   }
 
   public cancel() {
-    this.loginToken = null;
     this.subs?.forEach(sub => {
       sub?.unsubscribe();
     });
