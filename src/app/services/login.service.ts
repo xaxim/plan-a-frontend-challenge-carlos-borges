@@ -2,7 +2,7 @@ import { Injectable, OnDestroy } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Subscription } from 'rxjs';
 import { Router } from '@angular/router';
-import { StorageService } from './storage.service';
+import { Storage } from '@ionic/storage-angular';
 
 export interface Credentials {
   email: string;
@@ -24,12 +24,17 @@ export interface TokenResponse {
 })
 export class LoginService implements OnDestroy {
 
-  subs: Subscription[];
+  subs: Subscription[] = [];
 
+  public readonly currentUserStorageKey = 'currentUser';
+  private readonly apiBase = 'https://api.themoviedb.org/3';
+  private readonly apiKey = '8a732f489f66fcfb6feee9839dc02d76';
+  private readonly apiUsername = 'planatest';
+  private readonly apiPassword = '123456';
   constructor(
     private http: HttpClient,
     private router: Router,
-    private storage: StorageService
+    private storage: Storage
   ) { }
 
   ngOnDestroy(): void {
@@ -37,18 +42,14 @@ export class LoginService implements OnDestroy {
   }
 
   public login(credentials: Credentials) {
-    const BASE_API = 'https://api.themoviedb.org/3';
-    const API_KEY = '8a732f489f66fcfb6feee9839dc02d76';
-    const FIXED_USERNAME = 'planatest';
-    const FIXED_PASSWORD = '123456';
-    const createTokenURL = `${BASE_API}/authentication/token/new?api_key=${API_KEY}`;
-    const validateWithLoginURL = `${BASE_API}/authentication/token/validate_with_login?api_key=${API_KEY}`;
+    const createTokenURL = `${this.apiBase}/authentication/token/new?api_key=${this.apiKey}`;
+    const validateWithLoginURL = `${this.apiBase}/authentication/token/validate_with_login?api_key=${this.apiKey}`;
     const newTokenSubscription = this.http.get(createTokenURL).subscribe((newTokenResponse: TokenResponse) => {
       const validationSubscription = this.http.post(
         validateWithLoginURL,
         {
-          username: FIXED_USERNAME,
-          password: FIXED_PASSWORD,
+          username: this.apiUsername,
+          password: this.apiPassword,
           // eslint-disable-next-line @typescript-eslint/naming-convention
           request_token: newTokenResponse.request_token
         })
@@ -56,7 +57,7 @@ export class LoginService implements OnDestroy {
           if (validateWithLoginResponse?.success) {
             this.router.navigate(['/home']);
             this.storage.set(
-              'currentUser',
+              this.currentUserStorageKey,
               {
                 email: credentials.email,
                 password: credentials.password,
