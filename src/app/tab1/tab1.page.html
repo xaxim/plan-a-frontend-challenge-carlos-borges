@@ -14,9 +14,9 @@
   </ion-header>
 
   <ion-card *ngIf="movieDisplayed">
-    <img [src]="posterURL" *ngIf="posterURL && !movieDisplayed.adult" />
-    <ion-card-header>
-      <ion-card-title>{{ movieDisplayed.title }} {{ movieDisplayed.adult ? '🔞' : '' }}</ion-card-title>
+    <img *ngIf="showImage" [src]="posterURL" />
+    <ion-card-header (click)="toggleImageVisibility()">
+      <ion-card-title>{{ movieDisplayed.title }}<span *ngIf="movieDisplayed.adult"> 🔞</span></ion-card-title>
       <ion-card-subtitle *ngIf="movieDisplayed.original_title">{{ movieDisplayed.original_title }}</ion-card-subtitle>
     </ion-card-header>
 

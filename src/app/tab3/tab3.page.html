@@ -16,7 +16,7 @@
   <ion-list *ngIf="movies?.length === 0" lines="none">
     <ion-item>
       <ion-label class="ion-text-center">
-       The is currently no movie.
+       There is currently no movie.
       </ion-label>
     </ion-item>
   </ion-list>
@@ -24,9 +24,14 @@
   <ion-list *ngIf="movies?.length > 0">
 
     <ion-item *ngFor="let movieDisplayed of movies">
-      <ion-label>
-        {{ movieDisplayed.title }} {{ movieDisplayed.adult ? '🔞' : '' }}
+      <ion-avatar slot="start">
+        <img [src]="movieService.getMoviePoster(movieDisplayed)" />
+      </ion-avatar>
+      <ion-label class="ion-text-wrap">
+        <h2>{{ movieDisplayed.title }}{{ movieDisplayed.adult ? ' 🔞' : '' }}</h2>
+        <h3 *ngIf="movieDisplayed.original_title && movieDisplayed.title !== movieDisplayed.original_title">{{ movieDisplayed.original_title }}</h3>
       </ion-label>
+      <ion-note slot="end">{{ movieDisplayed.popularity }}</ion-note>
     </ion-item>
   </ion-list>
 

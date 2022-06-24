@@ -12,6 +12,7 @@ export class Tab1Page {
 
   movieDisplayed: MovieResponse;
   posterURL: string;
+  showImage = true;
 
   constructor(
     private loginService: LoginService,
@@ -26,22 +27,25 @@ export class Tab1Page {
   displayLatest() {
     this.movieService.getLatestMovie().subscribe(latest => {
       this.movieDisplayed = latest;
-      if (!latest.adult) {
-        this.posterURL = this.movieService.getMoviePoster(this.movieDisplayed);
-      }
-    });
-  }
-
-  displayMostPopular() {
-    this.movieService.getPopularMovies().subscribe(popularList => {
-      this.movieDisplayed = popularList.results[0];
       this.posterURL = this.movieService.getMoviePoster(this.movieDisplayed);
+      if (latest.adult) {
+        this.showImage = false;
+      }
+      if (!this.posterURL) {
+        this.showImage = false;
+      }
     });
   }
 
   logout() {
     this.loginService.logout();
     this.router.navigateByUrl('/login');
+  }
+
+  toggleImageVisibility() {
+    if (this.posterURL) {
+      this.showImage = !this.showImage;
+    }
   }
 
 }
