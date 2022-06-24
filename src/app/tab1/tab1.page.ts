@@ -1,20 +1,17 @@
-
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { LoginService } from '../services/login.service';
 import { MovieResponse, MovieService } from '../services/movie.service';
-import { HttpClient } from '@angular/common/http';
 
 @Component({
-  selector: 'app-home',
-  templateUrl: 'home.page.html',
-  styleUrls: ['home.page.scss'],
+  selector: 'app-tab1',
+  templateUrl: 'tab1.page.html',
+  styleUrls: ['tab1.page.scss']
 })
-export class HomePage implements OnInit {
+export class Tab1Page {
 
   movieDisplayed: MovieResponse;
   posterURL: string;
-  latest = true;
 
   constructor(
     private loginService: LoginService,
@@ -22,20 +19,20 @@ export class HomePage implements OnInit {
     private router: Router
   ) { }
 
-  ngOnInit(): void {
+  ionViewWillEnter() {
     this.displayLatest();
   }
 
   displayLatest() {
-    this.latest = true;
     this.movieService.getLatestMovie().subscribe(latest => {
       this.movieDisplayed = latest;
-      this.posterURL = this.movieService.getMoviePoster(this.movieDisplayed);
+      if (!latest.adult) {
+        this.posterURL = this.movieService.getMoviePoster(this.movieDisplayed);
+      }
     });
   }
 
   displayMostPopular() {
-    this.latest = false;
     this.movieService.getPopularMovies().subscribe(popularList => {
       this.movieDisplayed = popularList.results[0];
       this.posterURL = this.movieService.getMoviePoster(this.movieDisplayed);

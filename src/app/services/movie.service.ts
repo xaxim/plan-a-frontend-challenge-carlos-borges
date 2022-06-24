@@ -67,9 +67,14 @@ export class MovieService {
     return this.http.get<MovieResponse>(`${this.loginService.apiBase}/movie/latest?api_key=${this.loginService.apiKey}&language=en-US`);
   }
 
-  public getPopularMovies(): Observable<{ results: MovieResponse[] }> {
+  public getPopularMovies(page?: number): Observable<{ results: MovieResponse[] }> {
     // eslint-disable-next-line max-len
-    return this.http.get<{ results: MovieResponse[] }>(`${this.loginService.apiBase}/movie/popular?api_key=${this.loginService.apiKey}&language=en-US`);
+    return this.http.get<{ results: MovieResponse[] }>(`${this.loginService.apiBase}/movie/popular?api_key=${this.loginService.apiKey}&language=en-US&page=${page ? page : '1'}`);
+  }
+
+  public getTopRatedMovies(page?: number): Observable<{ results: MovieResponse[] }> {
+    // eslint-disable-next-line max-len
+    return this.http.get<{ results: MovieResponse[] }>(`${this.loginService.apiBase}/movie/top_rated?api_key=${this.loginService.apiKey}&language=en-US&page=${page ? page : '1'}`);
   }
 
   private getConfiguration() {

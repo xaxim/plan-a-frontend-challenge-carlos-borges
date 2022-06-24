@@ -1,0 +1,37 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>
+      Most Popular
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-header collapse="condense">
+    <ion-toolbar>
+      <ion-title size="large">Most Popular</ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+  <ion-list *ngIf="movies?.length === 0" lines="none">
+    <ion-item>
+      <ion-label class="ion-text-center">
+       The is currently no movie.
+      </ion-label>
+    </ion-item>
+  </ion-list>
+
+  <ion-list *ngIf="movies?.length > 0">
+
+    <ion-item *ngFor="let movieDisplayed of movies">
+      <ion-label>
+        {{ movieDisplayed.title }} {{ movieDisplayed.adult ? '🔞' : '' }}
+      </ion-label>
+    </ion-item>
+  </ion-list>
+
+  <ion-infinite-scroll (ionInfinite)="loadNextMovies($event)">
+    <ion-infinite-scroll-content loadingSpinner="bubbles" loadingText="Loading...">
+    </ion-infinite-scroll-content>
+  </ion-infinite-scroll>
+</ion-content>

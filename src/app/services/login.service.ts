@@ -67,7 +67,7 @@ export class LoginService implements OnDestroy {
                       password: credentials.password,
                       token: validateWithLoginResponse.request_token
                     });
-                  this.router.navigateByUrl('/home');
+                  this.router.navigateByUrl('/tabs');
                 }
               },
               error => {

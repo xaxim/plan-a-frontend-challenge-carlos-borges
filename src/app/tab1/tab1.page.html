@@ -1,0 +1,27 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>
+      Latest Movie
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-header collapse="condense">
+    <ion-toolbar>
+      <ion-title size="large">Latest Movie</ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+  <ion-card *ngIf="movieDisplayed">
+    <img [src]="posterURL" *ngIf="posterURL && !movieDisplayed.adult" />
+    <ion-card-header>
+      <ion-card-title>{{ movieDisplayed.title }} {{ movieDisplayed.adult ? '🔞' : '' }}</ion-card-title>
+      <ion-card-subtitle *ngIf="movieDisplayed.original_title">{{ movieDisplayed.original_title }}</ion-card-subtitle>
+    </ion-card-header>
+
+    <ion-card-content>
+      {{ movieDisplayed.overview }}<br>
+    </ion-card-content>
+  </ion-card>
+</ion-content>
